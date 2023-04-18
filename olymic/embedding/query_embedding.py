@@ -19,7 +19,10 @@ def vector_similarity(x: list[float], y: list[float]) -> float:
 
     Because OpenAI Embeddings are normalized to length 1, the cosine similarity is the same as the dot product.
     """
-    return np.dot(np.array(x), np.array(y))
+
+    similary =np.dot(np.array(x), np.array(y))
+    print(similary)
+    return similary
 
 
 def load_embeddings(fname: str) -> dict[tuple[str, str], list[float]]:
