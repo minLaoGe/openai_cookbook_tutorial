@@ -1,14 +1,17 @@
 import json
+import os
 
 import numpy as np
 import openai
 import pandas as pd
 import pickle
 import tiktoken
+from dotenv import load_dotenv
 from gpt_index.embeddings.openai import get_embedding
 save_file_name ='../olympics-data/olympics_sections_question_answer_embedding_zh.csv'
 
 load_dotenv()
+openai.api_key=os.environ.get('OPENAI_API_KEY')
 EMBEDDING_MODEL = "text-embedding-ada-002"
 def vector_similarity(x: list[float], y: list[float]) -> float:
     """
@@ -41,6 +44,7 @@ def order_document_sections_by_query_similarity(query: str, contexts: dict[(str,
 
     Return the list of document sections, sorted by relevance in descending order.
     """
+    print(openai.api_key)
     query_embedding = get_embedding(query,EMBEDDING_MODEL)
 
     document_similarities = sorted([
@@ -51,7 +55,11 @@ def order_document_sections_by_query_similarity(query: str, contexts: dict[(str,
 
 document_embeddings = load_embeddings(save_file_name)
 
-array = order_document_sections_by_query_similarity("Which country won the most gold medals during the 2020 Summer Olympics?", document_embeddings)[:1]
+
+question = '2020年夏季奥林匹克运动会那个国家获得的金牌最多?'
+
+#获取最相似的一个文档
+array = order_document_sections_by_query_similarity(question, document_embeddings)[:1]
 
 for index in array:
     print(index)
